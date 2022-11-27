@@ -90,7 +90,7 @@ services:
       - -c
       - |
         echo "Installing Connector"
-        confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.5.0
+        confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.6.1
         confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
         #
         echo "Launching Kafka Connect worker"
