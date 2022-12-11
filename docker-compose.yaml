@@ -92,11 +92,14 @@ services:
         echo "Installing Connector"
         confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.6.1
         confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.4.1
         #
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run &
         #
         sleep infinity
+    volumes:
+      - ./jdbc-drivers/mysql-connector-java.jar:/usr/share/java/kafka/mysql-connector-java.jar
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
   
@@ -133,3 +136,10 @@ services:
       - 8080:8080
     depends_on:
       - postgres
+  
+  mysql:
+      image: mysql:5.7
+      tty: true
+      environment:
+          - MYSQL_DATABASE=test_kafka
+          - MYSQL_ROOT_PASSWORD=root
