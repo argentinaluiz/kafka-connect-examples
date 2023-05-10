@@ -92,6 +92,7 @@ services:
         echo "Installing Connector"
         confluent-hub install --no-prompt mongodb/kafka-connect-mongodb:1.6.1
         confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
+        confluent-hub install --no-prompt debezium/debezium-connector-mysql:2.1.4
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.4.1
         #
         echo "Launching Kafka Connect worker"
@@ -126,20 +127,28 @@ services:
     environment:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
-      - DB_ADDR=postgres
-      - DB_VENDOR=postgres
+      # - DB_ADDR=postgres
+      # - DB_VENDOR=postgres
+      # - DB_DATABASE=keycloak
+      # - DB_PORT=5432
+      # - DB_USER=postgres
+      # - DB_PASSWORD=root
+      - DB_ADDR=mysql
+      - DB_VENDOR=mysql
       - DB_DATABASE=keycloak
-      - DB_PORT=5432
-      - DB_USER=postgres
+      - DB_PORT=3306
+      - DB_USER=root
       - DB_PASSWORD=root
     ports:
       - 8080:8080
     depends_on:
       - postgres
+      - mysql
   
   mysql:
       image: mysql:5.7
+      command: --server-id=1 --log-bin=mysql-bin
       tty: true
       environment:
-          - MYSQL_DATABASE=test_kafka
+          - MYSQL_DATABASE=keycloak
           - MYSQL_ROOT_PASSWORD=root
